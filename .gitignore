@@ -12,6 +12,7 @@
 *.dylib
 
 # Executables
+gr8
 *.exe
 *.out
 *.app
