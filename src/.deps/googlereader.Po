@@ -1,1 +1,0 @@
-googlereader.o googlereader.o: googlereader.c
