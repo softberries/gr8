@@ -64,7 +64,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(includedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_gr8_OBJECTS = main.$(OBJEXT) googlereader.$(OBJEXT) \
-	gr8_networking.$(OBJEXT)
+	gr8_networking.$(OBJEXT) ini.$(OBJEXT) configuration.$(OBJEXT)
 gr8_OBJECTS = $(am_gr8_OBJECTS)
 gr8_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
@@ -196,8 +196,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-include_HEADERS = googlereader.h gr8_networking.h
-gr8_SOURCES = main.c googlereader.c gr8_networking.c
+include_HEADERS = googlereader.h gr8_networking.h ini.h configuration.h
+gr8_SOURCES = main.c googlereader.c gr8_networking.c ini.c configuration.c
 AM_LDFLAGS = -lcurl
 all: all-am
 
@@ -283,8 +283,10 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/configuration.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/googlereader.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gr8_networking.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ini.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 
 .c.o:
