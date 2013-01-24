@@ -20,6 +20,4 @@ gr8
 # Logs
 *.log
 
-# Cache
-autom3te.cache/**.*
-
+*.Po
