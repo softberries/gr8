@@ -16,3 +16,6 @@ gr8
 *.exe
 *.out
 *.app
+
+# Logs
+*.log
