@@ -64,7 +64,8 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(includedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_gr8_OBJECTS = main.$(OBJEXT) googlereader.$(OBJEXT) \
-	gr8_networking.$(OBJEXT) ini.$(OBJEXT) configuration.$(OBJEXT)
+	gr8_networking.$(OBJEXT) ini.$(OBJEXT) configuration.$(OBJEXT) \
+	json_converter.$(OBJEXT)
 gr8_OBJECTS = $(am_gr8_OBJECTS)
 gr8_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I. -I$(top_builddir)
@@ -196,9 +197,9 @@ target_alias =
 top_build_prefix = ../
 top_builddir = ..
 top_srcdir = ..
-include_HEADERS = googlereader.h gr8_networking.h ini.h configuration.h
-gr8_SOURCES = main.c googlereader.c gr8_networking.c ini.c configuration.c
-AM_LDFLAGS = -lcurl
+include_HEADERS = googlereader.h gr8_networking.h ini.h configuration.h json_converter.h 
+gr8_SOURCES = main.c googlereader.c gr8_networking.c ini.c configuration.c json_converter.c
+AM_LDFLAGS = -lcurl -lncurses
 all: all-am
 
 .SUFFIXES:
@@ -287,6 +288,7 @@ include ./$(DEPDIR)/configuration.Po
 include ./$(DEPDIR)/googlereader.Po
 include ./$(DEPDIR)/gr8_networking.Po
 include ./$(DEPDIR)/ini.Po
+include ./$(DEPDIR)/json_converter.Po
 include ./$(DEPDIR)/main.Po
 
 .c.o:

@@ -7,7 +7,6 @@
 
 static int handler(void* user, const char* section, const char* name, const char* value){
   configuration *pconfig = (configuration*)user;
-
   #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
   if(MATCH("protocol", "version")){
     pconfig->version = atoi(value);
@@ -20,6 +19,103 @@ static int handler(void* user, const char* section, const char* name, const char
   }
   return 1;
 } 
+
+int save_user_code(user_code *code){
+  char *full_path;
+  check_file(USER_CODE_FILE,&full_path);
+  FILE *fp = fopen(full_path,"wb+");
+  if(fp){
+    //device code
+    fputs("device_code=",fp);
+    fputs(code->device_code,fp);
+    fputs("\n",fp);
+    //user code
+    fputs("user_code=",fp);
+    fputs(code->usr_code, fp);
+    fputs("\n",fp);
+    //verification url
+    fputs("verification_url=",fp);
+    fputs(code->verification_url,fp);
+    fputs("\n",fp);
+    //expires in
+    fputs("expires_in=",fp);
+    char ei_buffer[16] = {0};
+    sprintf(ei_buffer, "%d",code->expires_in);
+    fputs(ei_buffer,fp);
+    fputs("\n",fp);
+    //interval
+    fputs("interval=",fp);
+    char in_buffer[16] = {0};
+    sprintf(in_buffer, "%d",code->interval);
+    fputs(in_buffer,fp);
+    fputs("\n",fp);
+    fclose(fp);
+  }
+  free(full_path);
+  return 0;
+}
+void init_empty_code(user_code *code){
+  code->device_code = malloc(1);
+  code->usr_code = malloc(1);
+  code->verification_url = malloc(1);
+  if(code->device_code == NULL || code->usr_code == NULL || code->verification_url == NULL){
+   fprintf(stderr, "malloc() for init empty user code failed!\n");
+   exit(EXIT_FAILURE);
+  }
+  code->device_code[0] = '\0';
+  code->usr_code[0] = '\0';
+  code->verification_url[0] = '\0';
+}
+int read_user_code(user_code *uc){
+  FILE *fp;
+  char *full_path;
+  check_file(USER_CODE_FILE,&full_path);
+  char *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  char *dc = "device_code=";
+  char *ucc = "user_code=";
+  char *vu = "verification_url=";
+  char *ei = "expires_in=";
+  char *in = "interval=";
+  init_empty_token(uc);
+  fp = fopen(full_path,"r");
+  if(fp == NULL){
+    //return 1 for retrieving new token from google api
+    return 1;
+  }else{
+    while((read = getline(&line,&len,fp)) != -1){
+      char *res = NULL;
+      if(strstr(line,dc)){
+        res = strndup(line+strlen(dc),strlen(line));
+        uc->device_code = realloc(uc->device_code, strlen(res)+1);
+        memcpy(uc->device_code, res, strlen(res));
+        uc->device_code[strlen(res)] = '\0';
+      }else if(strstr(line,ucc)){
+        res = strndup(line+strlen(ucc),strlen(line));
+        uc->usr_code = realloc(uc->usr_code,strlen(res)+1);
+        memcpy(uc->usr_code, res, strlen(res));
+        uc->usr_code[strlen(res)] = '\0';
+      }else if(strstr(line,vu)){
+        res = strndup(line+strlen(vu),strlen(line));
+        uc->verification_url = realloc(uc->verification_url,strlen(res)+1);
+        memcpy(uc->verification_url, res, strlen(res));
+        uc->verification_url[strlen(res)] = '\0';
+      }else if(strstr(line,ei)){
+        res = strndup(line+strlen(ei),strlen(line));
+        uc->expires_in = atoi(res);
+      }else if(strstr(line,in)){
+        res = strndup(line+strlen(in),strlen(line));
+        uc->interval = atoi(res);
+      }
+      free(res);
+    }
+    if(line) free(line);
+      fclose(fp);
+  }
+  return 0;
+}
 int save_access_token(access_token *token){
   char *full_path;
   check_file(ACCESS_TOKEN_FILE,&full_path);
