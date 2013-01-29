@@ -4,21 +4,23 @@
 #include <regex.h>
 #include "json_converter.h"
 
+#define DEVICE_CODE_REGEX "\"device_code\" : \"([0-9\/a-zA-Z]+)\""
 
-int convert_user_code(response *r, user_code *uc){
-  printf("RESPONSE: %s\n",r->ptr);
-  //#define find_device_code "\"device_code\" : \"([\\s\\S]*?)\""
-  #define find_device_code "device"
-  int retval = 0;
-  regex_t reg_dc;
-  if(regcomp(&reg_dc, find_device_code, REG_EXTENDED) != 0){
-    printf("cannot compile regex expression %s\n",find_device_code);
-    return 1;//error
-  }
-  //device code buffer
-  char device_code[256];
-  if((retval = regexec(&reg_dc, r->ptr, 0, NULL, 0)) == 0) printf("found device code %s\n",device_code);
-
+void get_value(const char *full_str,const char *regex_str, char **result){
+  regex_t r;
+  regmatch_t matches[3];
+  regcomp(&r, regex_str, REG_EXTENDED);
+  regexec(&r, full_str, 3, matches, 0);
+  char *res = strndup((full_str)+matches[1].rm_so,matches[1].rm_eo-matches[1].rm_so);
+  *result = res;
+  regfree(&r);
+}
+int convert_user_code(response *resp, user_code *uc){
+  printf("RESPONSE: %s\n",resp->ptr);
+  char *dc;
+  get_value(resp->ptr,DEVICE_CODE_REGEX,&dc);
+  
+  printf("got from get_value: %s\n",dc);
   return 0;//ok
 }
 int convert_access_token(response *r, access_token *ac){
