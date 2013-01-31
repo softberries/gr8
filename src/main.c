@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ncurses.h>
+//#include <ncurses.h>
 #include <string.h>
 #include "googlereader.h"
 #include "json_converter.h"
 
-void prts(char *pattern, char *text){
-  mvprintw(LINES - 2, 0, pattern ,text);
-}
+//void prts(char *pattern, char *text){
+//  mvprintw(LINES - 2, 0, pattern ,text);
+//}
 int main(void){
   char mesg[]="Enter a command: ";/* message to be appeared on the screen */
   char str[80];
@@ -27,14 +27,13 @@ int main(void){
   response r = {response_str,0};
   user_code uc;
   convert_user_code(&r,&uc); 
-
 //  mvprintw(row/2,(col-strlen(mesg))/2,"%s",mesg);
   
 //  getstr(str);
 
 //  mvprintw(LINES - 2, 0, "You Entered: %s", str);
-  getch();
-  endwin();
+//  getch();
+//  endwin();
 
   return 0;
 }

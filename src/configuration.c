@@ -54,7 +54,7 @@ int save_user_code(user_code *code){
   free(full_path);
   return 0;
 }
-void init_empty_code(user_code *code){
+static void init_empty_code(user_code *code){
   code->device_code = malloc(1);
   code->usr_code = malloc(1);
   code->verification_url = malloc(1);
@@ -79,7 +79,7 @@ int read_user_code(user_code *uc){
   char *vu = "verification_url=";
   char *ei = "expires_in=";
   char *in = "interval=";
-  init_empty_token(uc);
+  init_empty_code(uc);
   fp = fopen(full_path,"r");
   if(fp == NULL){
     //return 1 for retrieving new token from google api
@@ -145,7 +145,7 @@ int save_access_token(access_token *token){
   return 0;//ok
 }
 
-void init_empty_token(access_token *t){
+static void init_empty_token(access_token *t){
   t->acc_token = malloc(1);
   t->token_type = malloc(1);
   t->expires_in = malloc(1);
